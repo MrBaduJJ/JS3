@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio 3</title>
+</head>
+<body>
+    <h1>Calificaciones de Estudiantes</h1>
+    <p>Ingresa los datos de los estudiantes:</p>
+
+    <div>
+        <input type="number" id="n" placeholder="Numero de estudiantes">
+        <button onclick="ingresarDatos()">Ingresar Datos</button>
+    </div>
+
+    <div id="resultados">
+        <h2>Resultados:</h2>
+        <p>Promedio de Matemáticas: <span id="promedioMatematicas"></span></p>
+        <p>Promedio de Física: <span id="promedioFisica"></span></p>
+        <p>Promedio de Programación: <span id="promedioProgramacion"></span></p>
+        <p>Número de alumnos aprobados en Matemáticas: <span id="aprobadosMatematicas"></span></p>
+        <p>Número de alumnos aprobados en Física: <span id="aprobadosFisica"></span></p>
+        <p>Número de alumnos aprobados en Programación: <span id="aprobadosProgramacion"></span></p>
+        <p>Número de alumnos aplazados en Matemáticas: <span id="aplazadosMatematicas"></span></p>
+        <p>Número de alumnos aplazados en Física: <span id="aplazadosFisica"></span></p>
+        <p>Número de alumnos aplazados en Programación: <span id="aplazadosProgramacion"></span></p>
+        <p>Número de alumnos que aprobaron todas las materias: <span id="aprobaronTodas"></span></p>
+        <p>Número de alumnos que aprobaron una sola materia: <span id="aprobaronUna"></span></p>
+        <p>Número de alumnos que aprobaron dos materias: <span id="aprobaronDos"></span></p>
+        <p>Nota máxima en Matemáticas: <span id="maximaMatematicas"></span></p>
+        <p>Nota máxima en Física: <span id="maximaFisica"></span></p>
+        <p>Nota máxima en Programación: <span id="maximaProgramacion"></span></p>
+    </div>
+
+    <script>
+        let estudiantes = [];
+        let promedios = [0, 0, 0];
+        let aprobados = [0, 0, 0];
+        let aplazados = [0, 0, 0];
+        let aprobaronTodas = 0;
+        let aprobaronUna = 0;
+        let aprobaronDos = 0;
+        let notasMaximas = [0, 0, 0];
+
+        function ingresarDatos() {
+            const n = parseInt(document.getElementById("n").value);
+            estudiantes = [];
+
+            for (let i = 0; i < n; i++) {
+                const cedula = prompt(`Cédula del estudiante ${i + 1}:`);
+                const matematicas = parseFloat(prompt(`Nota de Matemáticas del estudiante ${i + 1}:`));
+                const fisica = parseFloat(prompt(`Nota de Física del estudiante ${i + 1}:`));
+                const programacion = parseFloat(prompt(`Nota de Programación del estudiante ${i + 1}:`));
+
+                const estudiante = {
+                    cedula: cedula,
+                    matematicas: matematicas,
+                    fisica: fisica,
+                    programacion: programacion
+                };
+
+                estudiantes.push(estudiante);
+            }
+
+            calcularResultados();
+        }
+
+        function calcularResultados() {
+            promedios = [0, 0, 0];
+            aprobados = [0, 0, 0];
+            aplazados = [0, 0, 0];
+            aprobaronTodas = 0;
+            aprobaronUna = 0;
+            aprobaronDos = 0;
+            notasMaximas = [0, 0, 0];
+
+            for (let i = 0; i < estudiantes.length; i++) {
+                const estudiante = estudiantes[i];
+                promedios[0] += estudiante.matematicas;
+                promedios[1] += estudiante.fisica;
+                promedios[2] += estudiante.programacion;
+
+                if (estudiante.matematicas >= 10) {
+                    aprobados[0]++;
+                } else {
+                    aplazados[0]++;
+                }
+
+                if (estudiante.fisica >= 10) {
+                    aprobados[1]++;
+                } else {
+                    aplazados[1]++;
+                }
+
+                if (estudiante.programacion >= 10) {
+                    aprobados[2]++;
+                } else {
+                    aplazados[2]++;
+                }
+
+                if (estudiante.matematicas >= 10 && estudiante.fisica >= 10 && estudiante.programacion >= 10) {
+                    aprobaronTodas++;
+                }
+
+                if ((estudiante.matematicas >= 10 && estudiante.fisica < 10 && estudiante.programacion < 10) ||
+                    (estudiante.matematicas < 10 && estudiante.fisica >= 10 && estudiante.programacion < 10) ||
+                    (estudiante.matematicas < 10 && estudiante.fisica < 10 && estudiante.programacion >= 10)) {
+                    aprobaronUna++;
+                }
+
+                if ((estudiante.matematicas >= 10 && estudiante.fisica >= 10 && estudiante.programacion < 10) ||
+                    (estudiante.matematicas >= 10 && estudiante.fisica < 10 && estudiante.programacion >= 10) ||
+                    (estudiante.matematicas < 10 && estudiante.fisica >= 10 && estudiante.programacion >= 10)) {
+                    aprobaronDos++;
+                }
+
+                notasMaximas[0] = Math.max(notasMaximas[0], estudiante.matematicas);
+                notasMaximas[1] = Math.max(notasMaximas[1], estudiante.fisica);
+                notasMaximas[2] = Math.max(notasMaximas[2], estudiante.programacion);
+            }
+
+            for (let i = 0; i < 3; i++) {
+                promedios[i] /= estudiantes.length;
+            }
+
+            mostrarResultados();
+        }
+
+        function mostrarResultados() {
+            document.getElementById("promedioMatematicas").textContent = promedios[0].toFixed(2);
+            document.getElementById("promedioFisica").textContent = promedios[1].toFixed(2);
+            document.getElementById("promedioProgramacion").textContent = promedios[2].toFixed(2);
+
+            document.getElementById("aprobadosMatematicas").textContent = aprobados[0];
+            document.getElementById("aprobadosFisica").textContent = aprobados[1];
+            document.getElementById("aprobadosProgramacion").textContent = aprobados[2];
+
+            document.getElementById("aplazadosMatematicas").textContent = aplazados[0];
+            document.getElementById("aplazadosFisica").textContent = aplazados[1];
+            document.getElementById("aplazadosProgramacion").textContent = aplazados[2];
+
+            document.getElementById("aprobaronTodas").textContent = aprobaronTodas;
+            document.getElementById("aprobaronUna").textContent = aprobaronUna;
+            document.getElementById("aprobaronDos").textContent = aprobaronDos;
+
+            document.getElementById("maximaMatematicas").textContent = notasMaximas[0];
+            document.getElementById("maximaFisica").textContent = notasMaximas[1];
+            document.getElementById("maximaProgramacion").textContent = notasMaximas[2];
+
+            document.getElementById("resultados").style.display = "block";
+        }
+    </script>
+</body>
+</html>
